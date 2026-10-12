@@ -7,7 +7,7 @@ generated CLI starts its own changelog; this one records the template's.
 
 ## [Unreleased]
 
-## [template/v0.1.0] - 2026-10-12
+## [v0.1.0] - 2026-10-12
 
 The first release. A generated CLI starts as a minimal runnable command-line program on
 `github.com/standards-lab/go-core v0.8.0` and `github.com/standards-lab/go-cli-sdk v0.2.0`, with
@@ -30,4 +30,4 @@ The first release. A generated CLI starts as a minimal runnable command-line pro
   opt-in.
 
 [Unreleased]: https://github.com/standards-lab/go-cli-sdk-template/compare/template/v0.1.0...HEAD
-[template/v0.1.0]: https://github.com/standards-lab/go-cli-sdk-template/releases/tag/template/v0.1.0
+[v0.1.0]: https://github.com/standards-lab/go-cli-sdk-template/releases/tag/template/v0.1.0
