@@ -12,19 +12,19 @@ import (
 	"github.com/standards-lab/go-core/process"
 
 	"github.com/standards-lab/go-cli-sdk-template/template/internal/app"
+	"github.com/standards-lab/go-cli-sdk-template/template/internal/apptest"
 )
 
 // shutdownTimeout is the one variable the template reads.
 var shutdownTimeout = lifecycle.NewEnv("APP").ShutdownTimeout
 
-// newApp returns the App over fresh buffers, and the log of the nodes its
-// runs build, recorded with Observe on its published graph.
-func newApp(t *testing.T) (a *app.App, stdout, stderr *bytes.Buffer, built *[]string) {
+// newApp returns the App over fresh buffers, and the recorder of the nodes
+// its runs build.
+func newApp(t *testing.T) (a *app.App, stdout, stderr *bytes.Buffer, built *apptest.Recorder) {
 	t.Helper()
-	stdout, stderr, built = new(bytes.Buffer), new(bytes.Buffer), new([]string)
+	stdout, stderr = new(bytes.Buffer), new(bytes.Buffer)
 	a = app.New(cli.Streams{Stdin: strings.NewReader(""), Stdout: stdout, Stderr: stderr})
-	a.Graph().Observe(func(name string) { *built = append(*built, name) })
-	return a, stdout, stderr, built
+	return a, stdout, stderr, apptest.Builds(a)
 }
 
 // probe adds a leaf at a's root that declares the lifecycle config node and
@@ -60,8 +60,8 @@ func TestRun_RootHelp(t *testing.T) {
 			if stderr.Len() != 0 {
 				t.Errorf("stderr = %q, want empty", stderr)
 			}
-			if len(*built) != 0 {
-				t.Errorf("nodes built = %q, want none", *built)
+			if log := built.Log(); len(log) != 0 {
+				t.Errorf("nodes built = %q, want none", log)
 			}
 		})
 	}
@@ -82,8 +82,8 @@ func TestRun_UnknownCommand(t *testing.T) {
 	if stdout.Len() != 0 {
 		t.Errorf("stdout = %q, want empty", stdout)
 	}
-	if len(*built) != 0 {
-		t.Errorf("nodes built = %q, want none", *built)
+	if log := built.Log(); len(log) != 0 {
+		t.Errorf("nodes built = %q, want none", log)
 	}
 }
 
@@ -103,8 +103,8 @@ func TestRun_Version(t *testing.T) {
 	if stderr.Len() != 0 {
 		t.Errorf("stderr = %q, want empty", stderr)
 	}
-	if len(*built) != 0 {
-		t.Errorf("nodes built = %q, want none", *built)
+	if log := built.Log(); len(log) != 0 {
+		t.Errorf("nodes built = %q, want none", log)
 	}
 }
 
@@ -116,8 +116,8 @@ func TestNew_IsCold(t *testing.T) {
 	if stdout.Len() != 0 || stderr.Len() != 0 {
 		t.Errorf("New() wrote %q, %q, want nothing", stdout, stderr)
 	}
-	if len(*built) != 0 {
-		t.Errorf("nodes built = %q, want none", *built)
+	if log := built.Log(); len(log) != 0 {
+		t.Errorf("nodes built = %q, want none", log)
 	}
 }
 
@@ -134,8 +134,8 @@ func TestRun_CommandBuildsTheLifecycleConfig(t *testing.T) {
 	if !*ran {
 		t.Error("probe did not run")
 	}
-	if want := []string{"lifecycle config"}; !slices.Equal(*built, want) {
-		t.Errorf("nodes built = %q, want %q", *built, want)
+	if want := []string{"lifecycle config"}; !slices.Equal(built.Log(), want) {
+		t.Errorf("nodes built = %q, want %q", built.Log(), want)
 	}
 }
 
@@ -154,5 +154,51 @@ func TestRun_InvalidShutdownTimeoutFailsTheCommand(t *testing.T) {
 	}
 	if want := "app probe: lifecycle config: APP_SHUTDOWN_TIMEOUT"; !strings.HasPrefix(stderr.String(), want) {
 		t.Errorf("stderr = %q, want it to start with %q", stderr, want)
+	}
+}
+
+// A halted run of a command that declares nodes builds the lifecycle config,
+// which fails with ErrHalted before the command runs. An unreadable
+// configuration proves the substitute replaced the production constructor.
+func TestRun_HaltStopsTheCommand(t *testing.T) {
+	t.Setenv(shutdownTimeout, "not-a-duration")
+	a, stdout, stderr, built := newApp(t)
+	ran := probe(a)
+	apptest.Halt(a)
+
+	code := a.Run(context.Background(), []string{"probe"})
+
+	if code != process.ExitFailure {
+		t.Errorf("code = %d, want %d", code, process.ExitFailure)
+	}
+	if *ran {
+		t.Error("probe ran, want it stopped by the Build")
+	}
+	if want := "app probe: lifecycle config: " + apptest.ErrHalted.Error(); !strings.HasPrefix(stderr.String(), want) {
+		t.Errorf("stderr = %q, want it to start with %q", stderr, want)
+	}
+	if stdout.Len() != 0 {
+		t.Errorf("stdout = %q, want empty", stdout)
+	}
+	if want := []string{"lifecycle config"}; !slices.Equal(built.Log(), want) {
+		t.Errorf("nodes built = %q, want %q", built.Log(), want)
+	}
+}
+
+// Halt touches only a Build, so a run that builds nothing is unaffected.
+func TestRun_HaltLeavesVersion(t *testing.T) {
+	a, stdout, stderr, built := newApp(t)
+	apptest.Halt(a)
+
+	code := a.Run(context.Background(), []string{"version"})
+
+	if code != process.ExitOK {
+		t.Errorf("code = %d, want %d; stderr = %q", code, process.ExitOK, stderr)
+	}
+	if stdout.String() != "(devel)\n" {
+		t.Errorf("stdout = %q, want %q", stdout, "(devel)\n")
+	}
+	if log := built.Log(); len(log) != 0 {
+		t.Errorf("nodes built = %q, want none", log)
 	}
 }
