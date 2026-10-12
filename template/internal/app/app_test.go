@@ -108,17 +108,22 @@ func TestRun_Version(t *testing.T) {
 	}
 }
 
+// New builds nothing: the graph freezes on its first Build and panics on a
+// Replace after it, so Halt's Replace succeeding proves New never built.
 func TestNew_IsCold(t *testing.T) {
 	t.Setenv(shutdownTimeout, "not-a-duration")
 
-	_, stdout, stderr, built := newApp(t)
+	a, stdout, stderr, _ := newApp(t)
 
 	if stdout.Len() != 0 || stderr.Len() != 0 {
 		t.Errorf("New() wrote %q, %q, want nothing", stdout, stderr)
 	}
-	if log := built.Log(); len(log) != 0 {
-		t.Errorf("nodes built = %q, want none", log)
-	}
+	defer func() {
+		if r := recover(); r != nil {
+			t.Errorf("Replace after New() panicked: %v; want the graph unbuilt", r)
+		}
+	}()
+	apptest.Halt(a)
 }
 
 func TestRun_CommandBuildsTheLifecycleConfig(t *testing.T) {
