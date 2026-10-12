@@ -5,6 +5,8 @@
 // nodes in its define function and owns its mount, so the layer files are
 // the architecture's layer list:
 //
+//   - app.go: [App], [New], and [Nodes], which call the layer files'
+//     define and mount functions in layer order, lowest first;
 //   - infrastructure.go: defineInfrastructure, the configuration, read from
 //     APP_ variables, and the services the program is composed on (the
 //     lifecycle configuration alone, in the template baseline);
@@ -12,7 +14,15 @@
 //     their commands (none, in the template);
 //   - version.go: the version command, which declares no nodes.
 //
-// The template has no admin layer and no scenario layer.
+// The template has no admin layer and no scenario layer by default. An
+// admin layer, the services that administer an infrastructure service, goes
+// in its own admin.go, defined between infrastructure and domain.
+//
+// Scenarios are opt-in. A CLI that adds them keeps its scenario.Scenario
+// values in a root-level scenarios package and adds a scenario layer file,
+// scenario.go, that mounts scenario.Commands(...) at the root and ends the
+// root's Footer with scenario.WriteListing over the same scenarios. The
+// scenario package of go-cli-sdk documents the runner and the narration.
 //
 // [Nodes] holds one handle per node: each define function fills its own
 // part of one Nodes value, and its constructors read the lower layers'
