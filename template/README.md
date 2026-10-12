@@ -50,13 +50,15 @@ Each task wraps a plain command, so the repository works without mise:
 
 ## Testing
 
-Two tiers. The unit tier is hermetic and runs on every pull request: `go test -race ./...`.
+The CLI has two test tiers. The unit tier is hermetic and runs on every pull request:
+`go test -race ./...`.
 `internal/app`'s tests run the App in process over buffers, with the fixtures in
 `internal/apptest`: `Builds` records the nodes a run builds, and `Halt` stops a run before
 anything starts. The integration tier is the `integration` package: an untagged harness that
 builds `cmd/app` once and runs it as a subprocess, one shot at a time, over go-core's
 `process/processtest`. Under the `integration` build tag, the suite asserts the CLI through its
-arguments, its two output streams, and its exit code. It runs on merge to main and on demand.
+arguments, its two output streams, and its exit code. CI runs it on every push to main and on
+demand.
 
 ## Building out the CLI
 
@@ -74,7 +76,7 @@ when it returns. `cmd/app` is the entrypoint alone.
 
 ## Scenarios
 
-A scenario is a narrated guided tour of the CLI's own commands, run as
+A scenario is a narrated, guided tour of the CLI's own commands, run as
 `<cli> scenario <name>`. The template has none; go-cli-sdk's
 [`scenario`](https://pkg.go.dev/github.com/standards-lab/go-cli-sdk/scenario) package runs them.
 To opt in:

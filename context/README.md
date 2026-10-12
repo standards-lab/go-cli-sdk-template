@@ -10,17 +10,19 @@ This context records only working knowledge the code and the READMEs do not expr
 
 ## Capability map
 
-Built as of `template/v0.1.0`; the code and each package's `doc.go` are authoritative.
+Every capability below is built, as of `template/v0.1.0`. The code and each package's `doc.go`
+are authoritative for each.
 
-- **Runnable baseline** (built): the `cmd` entrypoint, the composition root `internal/app` with
+- **Runnable baseline**: the `cmd` entrypoint, the composition root `internal/app` with
   configuration as graph nodes, and a `version` command.
-- **Integration tier** (built): fixtures in `apptest`, and an integration suite on
+- **Test tiers**: the composition root's fixtures in `apptest`, and an integration suite on
   `processtest`'s one-shot runner.
-- **Generation** (built): the constraints that keep the module cleanly copyable with `gonew`:
-  the subtree boundary, every file surviving the path rewrite, and the starter README's identity
+- **Generation**: the constraints that keep the module cleanly copyable with `gonew`: the
+  subtree boundary, every file surviving the path rewrite, and the starter README's identity
   steps.
-- **CI and release** (built): CI runs `mise run check` inside `template/`; releases are
-  `template/v*` tags cut from the root `CHANGELOG.md`.
+- **CI and release**: CI runs `mise run check` inside `template/` on every pull request and push
+  to `main`, and the integration suite on pushes and on demand. Releases are `template/v*` tags
+  cut from the root `CHANGELOG.md`.
 
-Scenarios are opt-in: go-cli-sdk's `scenario` package carries them, and the starter README and
+Scenarios are opt-in: go-cli-sdk's `scenario` package runs them, and the starter README and
 `internal/app`'s `doc.go` describe how a generated CLI mounts its own. The template ships none.

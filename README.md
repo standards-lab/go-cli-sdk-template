@@ -13,8 +13,8 @@ command-line program on [go-core](https://github.com/standards-lab/go-core) and
   it returns;
 - the composition root as one file per architecture layer (infrastructure, domain), each
   defining its layer's nodes and owning its mount;
-- an integration tier that runs the built binary one shot at a time, on go-core's
-  `processtest`, with the fixtures internal/app's tests share in `apptest`.
+- the composition root's test fixtures in `internal/apptest`, and an integration tier that runs
+  the built binary one shot at a time on go-core's `processtest`.
 
 New CLIs are generated from it:
 
@@ -40,8 +40,7 @@ It documents running the CLI, localizing its identity, and opting in to scenario
 `go-cli-sdk-template` is the CLI template of
 [Go Elemental](https://github.com/standards-lab/architecture/blob/main/standards/go-elemental/README.md), the
 minimal-dependency Go standard. This README and each package's `doc.go` document the
-repository; the standard's principles it enhances are stated below.
-Its repository-level principles:
+repository. Its repository-level principles enhance the standard's:
 
 - The template module depends on `go-core` and `go-cli-sdk` at pinned releases, and nothing
   else. The template is engine-free: no data engine is declared and no provider is imported; a
@@ -51,14 +50,14 @@ Its repository-level principles:
   first build.
 - The template stays minimal and stable: it scaffolds the baseline architecture, and the SDKs
   carry the bulk of development change. A generated CLI keeps pace by updating its `go-core`
-  and `go-cli-sdk` versions. Scenarios are opt-in: go-cli-sdk's `scenario` package carries
-  them, and the starter README shows how a CLI mounts its own.
+  and `go-cli-sdk` versions. Scenarios are opt-in: go-cli-sdk's `scenario` package runs them,
+  and the starter README shows how a CLI mounts its own.
 
 ## Repository layout
 
 `template/` is the module a generated CLI copies, and development happens inside it:
 
-- `cmd/app`: the entrypoint, the signal context and one call into the composition root;
+- `cmd/app`: the entrypoint, which derives the signal context and calls the composition root;
 - `internal/app`: the composition root, one file per layer (`infrastructure.go`, `domain.go`)
   beside `app.go` and the `version` command;
 - `internal/apptest`: the fixtures internal/app's tests share;
@@ -67,10 +66,10 @@ Its repository-level principles:
 - `mise.toml`, `scripts/`, `.github/workflows/`: the tasks, the currency report, and CI.
 
 The root above it maintains the template: `context/` records its design and session state, this
-README documents it, `CHANGELOG.md` sources the `template/v*` release notes, and the CI and
-release workflows run inside and for `template/`. The template's `.gitignore` and CI workflow
-are separate copies of the root ones; a change to either copy is applied to the other in the
-same commit.
+README documents it, `CHANGELOG.md` sources the `template/v*` release notes, the CI workflow
+runs the checks inside `template/`, and the release workflow creates a GitHub release for each
+`template/v*` tag. The template's `.gitignore` and CI workflow are separate copies of the root
+ones; a change to either copy is applied to the other in the same commit.
 
 ## Development
 

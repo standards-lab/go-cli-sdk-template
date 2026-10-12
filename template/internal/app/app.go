@@ -19,9 +19,9 @@ type App struct {
 
 // New describes the graph, layer by layer, lowest first, builds the command
 // tree, and returns the App. It is cold: it constructs nothing, reads no
-// configuration, and writes nothing until [App.Run]. streams are what every
-// run reads from and writes to: Stdin is what a command reads as standard
-// input, and nothing reads it but such a command.
+// configuration, and writes nothing until [App.Run]. Every run reads from
+// and writes to streams; only a command that reads standard input reads
+// Stdin.
 func New(streams cli.Streams) *App {
 	a := &App{
 		graph: graph.New(),

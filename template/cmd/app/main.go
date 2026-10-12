@@ -1,5 +1,5 @@
-// Command app is the template's command-line program. Its main sequence is
-// the signal context and one call into the composition root, internal/app.
+// Command app is the template's command-line program. Its main derives the
+// signal context and makes one call into the composition root, internal/app.
 package main
 
 import (
