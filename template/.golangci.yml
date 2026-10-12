@@ -1,0 +1,38 @@
+# golangci-lint v2 configuration, run per module by `mise run check`.
+version: "2"
+
+linters:
+  # The standard set (errcheck, govet, ineffassign, staticcheck, unused),
+  # plus depguard, which holds the module to its allowed imports, and
+  # testpackage, which keeps tests black-box. testpackage skips only
+  # export_test.go, the one white-box file allowed, and only to export a
+  # clock or probe hook the API cannot reach deterministically; every other
+  # test lives in <pkg>_test and drives the exported API.
+  default: standard
+  enable:
+    - depguard
+    - testpackage
+  settings:
+    testpackage:
+      skip-regexp: export_test\.go
+    depguard:
+      rules:
+        # The CLI depends on nothing but the standard library, go-core,
+        # and go-cli-sdk. The rule covers every Go file, tests included:
+        # they drive the API with the same imports plus the module itself.
+        # Allow entries match by prefix unless they end in `$`, so each is
+        # anchored: a library as its exact module path or a path under it
+        # (not a sibling like go-core-extra), and the module as itself or
+        # a package under it (not a sibling like template-extra).
+        module:
+          list-mode: strict
+          files:
+            - "**/*.go"
+          allow:
+            - $gostd
+            - github.com/standards-lab/go-core$
+            - github.com/standards-lab/go-core/
+            - github.com/standards-lab/go-cli-sdk$
+            - github.com/standards-lab/go-cli-sdk/
+            - github.com/standards-lab/go-cli-sdk-template/template$
+            - github.com/standards-lab/go-cli-sdk-template/template/

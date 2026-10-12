@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+
+      - uses: jdx/mise-action@v5.1.2
+
+      - name: mise run check
+        run: mise run check
+
+  # The integration tier: the built CLI, black-box, one shot at a time. On
+  # merge to main and on demand, below the per-PR unit rate by design; a
+  # release is cut only from a main whose run has passed.
+  integration:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+
+      - uses: jdx/mise-action@v5.1.2
+
+      - name: mise run integration
+        run: mise run integration
