@@ -45,8 +45,6 @@ covers the graph a CLI defines. Porting meets these:
 
 - **Breaking:** the go-core pin moves to v0.11.0 (from v0.8.0) and the go-cli-sdk pin to v0.3.0
   (from v0.2.0), with the porting list above.
-- **Breaking** for a CLI that ports it: `App.Run` dispatches through `cli.Program` in place of
-  `cli.Run` with `cli.WithGraph`.
 - The `Nodes` fields carry no name comments; `internal/app/doc.go`, both READMEs, and `App.Run`'s
   comment describe the field-name rule, the graph tests, and `cli.Program`. An App still runs
   one command at a time, now because each dispatch restores the flags the previous one set.
