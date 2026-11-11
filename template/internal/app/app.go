@@ -52,10 +52,12 @@ func (a *App) Run(ctx context.Context, args []string) int {
 // Nodes is the App's graph, one handle per node: the single description of
 // what the program is composed of. Each layer file's define function fills
 // its own part of one Nodes value, and its constructors read the lower
-// layers' nodes from that same value. Each field's node is named as the
-// dispatcher labels its errors.
+// layers' nodes from that same value. Each field's node or group is named
+// for the field, its words lowercased and spaced, so LifecycleConfig holds
+// "lifecycle config", the name the dispatcher labels its errors with; the
+// field names the node, and no comment repeats it.
 type Nodes struct {
-	LifecycleConfig *graph.Node[lifecycle.Config] // "lifecycle config"
+	LifecycleConfig *graph.Node[lifecycle.Config]
 }
 
 // Graph returns the graph a's commands are built from, as [New] described
