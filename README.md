@@ -15,8 +15,7 @@ command-line program on [go-core](https://github.com/standards-lab/go-core) and
   defining its layer's nodes and owning its mount;
 - the composition root's test fixtures in `internal/apptest`, graph tests that check each node
   is named for its `Nodes` field and each leaf command keeps its layer order, and an
-  integration tier that runs
-  the built binary one shot at a time on go-core's `processtest`.
+  integration tier that runs the built binary one shot at a time on go-core's `processtest`.
 
 New CLIs are generated from it:
 

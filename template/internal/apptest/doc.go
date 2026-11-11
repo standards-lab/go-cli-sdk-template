@@ -5,8 +5,8 @@
 // constructor a fixture does not swap stays the production one.
 //
 // [Builds] records the name of every node a run's Build begins, read from
-// the handle graph.Graph.Observe reports, so a test asserts which nodes a command builds from
-// what the graph reports. [Halt] fails the lifecycle configuration node,
+// the handle graph.Graph.Observe reports, so a test asserts which nodes a
+// command builds from what the graph reports. [Halt] fails the lifecycle configuration node,
 // which the dispatcher adds to every Build, so a run of a command that
 // declares nodes fails before anything starts.
 //

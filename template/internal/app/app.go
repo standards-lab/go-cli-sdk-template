@@ -48,7 +48,8 @@ func New(streams cli.Streams) *App {
 // restores the flags the previous one set on the App's tree, so two runs
 // at once would share its flag values.
 func (a *App) Run(ctx context.Context, args []string) int {
-	return cli.Program{Root: a.root, Graph: a.graph, LifecycleConfig: a.nodes.LifecycleConfig}.Run(ctx, args, a.streams)
+	p := cli.Program{Root: a.root, Graph: a.graph, LifecycleConfig: a.nodes.LifecycleConfig}
+	return p.Run(ctx, args, a.streams)
 }
 
 // Nodes is the App's graph, one handle per node: the single description of
