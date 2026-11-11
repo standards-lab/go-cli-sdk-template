@@ -38,24 +38,29 @@ func New(streams cli.Streams) *App {
 	return a
 }
 
-// Run dispatches args, the program arguments without the program name, and
-// returns the process exit code. The dispatcher builds the nodes the
-// selected command's path declares with Use from the App's graph, with the
+// Run dispatches args, the program arguments without the program name, as
+// a go-cli-sdk cli.Program over the App's tree, graph, and lifecycle
+// configuration node, and returns the process exit code. The dispatcher
+// builds the nodes the selected command's path declares with Use, with the
 // lifecycle configuration node, and shuts what it built down before Run
 // returns, so a Build, start, or shutdown error is reported with the
-// command's result. An App runs one command at a time, since a graph.Graph
-// is not safe for concurrent use.
+// command's result. An App runs one command at a time: each dispatch
+// restores the flags the previous one set on the App's tree, so two runs
+// at once would share its flag values.
 func (a *App) Run(ctx context.Context, args []string) int {
-	return cli.Run(ctx, a.root, args, a.streams, cli.WithGraph(a.graph, a.nodes.LifecycleConfig))
+	p := cli.Program{Root: a.root, Graph: a.graph, LifecycleConfig: a.nodes.LifecycleConfig}
+	return p.Run(ctx, args, a.streams)
 }
 
 // Nodes is the App's graph, one handle per node: the single description of
 // what the program is composed of. Each layer file's define function fills
 // its own part of one Nodes value, and its constructors read the lower
-// layers' nodes from that same value. Each field's node is named as the
-// dispatcher labels its errors.
+// layers' nodes from that same value. Each field's node or group is named
+// for the field, its words lowercased and spaced, so LifecycleConfig holds
+// "lifecycle config", the name the dispatcher labels its errors with; the
+// field names the node, and no comment repeats it.
 type Nodes struct {
-	LifecycleConfig *graph.Node[lifecycle.Config] // "lifecycle config"
+	LifecycleConfig *graph.Node[lifecycle.Config]
 }
 
 // Graph returns the graph a's commands are built from, as [New] described

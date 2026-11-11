@@ -4,11 +4,11 @@
 // it before it runs, each an observer or a Replace on the App's graph; a
 // constructor a fixture does not swap stays the production one.
 //
-// [Builds] records the name of every node a run's Build begins, through
-// graph.Graph.Observe, so a test asserts which nodes a command builds from
-// what the graph reports. [Halt] fails the lifecycle configuration node,
-// which the dispatcher adds to every Build, so a run of a command that
-// declares nodes fails before anything starts.
+// [Builds] records the name of every node a run's Build begins, read from
+// the handle graph.Graph.Observe reports, so a test asserts which nodes a
+// command builds from what the graph reports. [Halt] fails the lifecycle
+// configuration node, which the dispatcher adds to every Build, so a run of
+// a command that declares nodes fails before anything starts.
 //
 // The package exports:
 //
