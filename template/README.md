@@ -54,7 +54,10 @@ The CLI has two test tiers. The unit tier is hermetic and runs on every pull req
 `go test -race ./...`.
 `internal/app`'s tests run the App in process over buffers, with the fixtures in
 `internal/apptest`: `Builds` records the nodes a run builds, and `Halt` stops a run before
-anything starts. The integration tier is the `integration` package: an untagged harness that
+anything starts. `internal/app`'s graph tests check the composition itself: each `Nodes` field
+names its node (go-core's `graphtest.CheckNames`), and every leaf command, as the root's
+`Leaves` yields it, builds its nodes without dropping an order between layers, so a command
+mounted later is checked too. The integration tier is the `integration` package: an untagged harness that
 builds `cmd/app` once and runs it as a subprocess, one shot at a time, over go-core's
 `process/processtest`. Under the `integration` build tag, the suite asserts the CLI through its
 arguments, its two output streams, and its exit code. CI runs it on every push to main and on
@@ -70,9 +73,10 @@ and those files are the build points:
 
 Each layer file defines its layer's nodes on go-core's dependency graph, in its define function
 (`defineInfrastructure`, `defineDomain`), and owns its mount (`mountDomain`). The `Nodes` value
-holds one handle per node. A command declares the nodes it reads with `Use`; the dispatcher
+holds one handle per node, each named for its field. A command declares the nodes it reads with `Use`; the dispatcher
 builds only those, with the lifecycle configuration, when the command runs, and shuts them down
-when it returns. `cmd/app` is the entrypoint alone.
+when it returns; `App.Run` hands the tree to go-cli-sdk's `cli.Program`, which does that
+dispatch. `cmd/app` is the entrypoint alone.
 
 ## Scenarios
 

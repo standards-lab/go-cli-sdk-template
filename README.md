@@ -4,8 +4,8 @@ The CLI template of the `go-elemental` standard. A generated CLI starts as a min
 command-line program on [go-core](https://github.com/standards-lab/go-core) and
 [go-cli-sdk](https://github.com/standards-lab/go-cli-sdk), carrying:
 
-- the command tree on go-cli-sdk's dispatcher, with help, usage errors, and exit codes, and a
-  `version` command;
+- the command tree, run by go-cli-sdk's `cli.Program`, with help, usage errors, and exit
+  codes, and a `version` command;
 - configuration as nodes of go-core's dependency graph, read from `APP_` environment variables
   and validated before a command runs;
 - the cold/hot start lifecycle: the graph is described with no I/O, and each command builds
@@ -13,7 +13,9 @@ command-line program on [go-core](https://github.com/standards-lab/go-core) and
   it returns;
 - the composition root as one file per architecture layer (infrastructure, domain), each
   defining its layer's nodes and owning its mount;
-- the composition root's test fixtures in `internal/apptest`, and an integration tier that runs
+- the composition root's test fixtures in `internal/apptest`, graph tests that check each node
+  is named for its `Nodes` field and each leaf command keeps its layer order, and an
+  integration tier that runs
   the built binary one shot at a time on go-core's `processtest`.
 
 New CLIs are generated from it:
