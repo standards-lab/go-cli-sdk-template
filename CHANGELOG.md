@@ -30,8 +30,8 @@ Porting meets these:
 
 ### Changed
 
-- **Breaking:** the pins move: go-cli-sdk to v0.4.0 (from v0.3.0) and go-core to v0.12.0 (from
-  v0.11.0), with the porting list above.
+- **Breaking:** the go-core pin moves to v0.12.0 (from v0.11.0) and the go-cli-sdk pin to v0.4.0
+  (from v0.3.0), with the porting list above.
 
 ## [v0.2.0] - 2026-11-11
 
