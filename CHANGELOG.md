@@ -7,6 +7,32 @@ generated CLI starts its own changelog; this one records the template's.
 
 ## [Unreleased]
 
+## [v0.3.0] - 2026-11-12
+
+The template moves onto go-core v0.12.0 and go-cli-sdk v0.4.0. The template's own code is
+unchanged: it calls none of the forms either release changes. The module depends on
+`github.com/standards-lab/go-core v0.12.0` and `github.com/standards-lab/go-cli-sdk v0.4.0`.
+
+A generated CLI that ports this release from v0.2.0 also takes the libraries' own changes since
+its previous pins; the [go-core](https://github.com/standards-lab/go-core/blob/main/CHANGELOG.md)
+and [go-cli-sdk](https://github.com/standards-lab/go-cli-sdk/blob/main/CHANGELOG.md) CHANGELOGs
+list them, with go-core's
+[Migrating from v0.11.0](https://github.com/standards-lab/go-core/blob/main/CHANGELOG.md#migrating-from-v0110)
+and go-cli-sdk's
+[Migrating from v0.3.0](https://github.com/standards-lab/go-cli-sdk/blob/main/CHANGELOG.md#migrating-from-v030).
+Porting meets these:
+
+- `cli.StringsVar(fs, &tags, "tag", def, usage)` becomes
+  `fs.Var(cli.StringsValue(&tags, def), "tag", usage)`; `cli.StringsVar` is removed.
+- `reactor.New` and `event.NewRecorder` take a trailing `reactor.Options` and `event.Options`
+  in place of variadic option functions; a call with no option passes the zero value.
+  `reactor.CancelWithin` returns a `time.Duration`, set as `reactor.Options.CancelAfter`.
+
+### Changed
+
+- **Breaking:** the pins move: go-cli-sdk to v0.4.0 (from v0.3.0) and go-core to v0.12.0 (from
+  v0.11.0), with the porting list above.
+
 ## [v0.2.0] - 2026-11-11
 
 The template moves onto go-core v0.11.0 and go-cli-sdk v0.3.0: the command tree runs as a
@@ -73,6 +99,7 @@ The first release. A generated CLI starts as a minimal runnable command-line pro
   wrappers), the CI workflow, and the starter README with the identity steps and the scenario
   opt-in.
 
-[Unreleased]: https://github.com/standards-lab/go-cli-sdk-template/compare/template/v0.2.0...HEAD
+[Unreleased]: https://github.com/standards-lab/go-cli-sdk-template/compare/template/v0.3.0...HEAD
+[v0.3.0]: https://github.com/standards-lab/go-cli-sdk-template/compare/template/v0.2.0...template/v0.3.0
 [v0.2.0]: https://github.com/standards-lab/go-cli-sdk-template/compare/template/v0.1.0...template/v0.2.0
 [v0.1.0]: https://github.com/standards-lab/go-cli-sdk-template/releases/tag/template/v0.1.0

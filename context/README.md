@@ -10,7 +10,7 @@ This context records only working knowledge the code and the READMEs do not expr
 
 ## Capability map
 
-Every capability below is built, as of `template/v0.2.0`. The code and each package's `doc.go`
+Every capability below is built, as of `template/v0.3.0`. The code and each package's `doc.go`
 are authoritative for each.
 
 - **Runnable baseline**: the `cmd` entrypoint, the composition root `internal/app` with
