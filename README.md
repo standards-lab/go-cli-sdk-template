@@ -81,8 +81,9 @@ mise run check
 mise run integration
 ```
 
-`template/mise.toml` carries the tasks: `check` (the one read-only check CI runs),
-`integration` (the integration tier), `currency` (what trails its latest), `upgrade`, and the
+`template/mise.toml` pins marathon's tools and carries the tasks: `check` (the one read-only
+check CI runs, ending with lint-context and lint-references in `template/` and at the repository
+root), `integration` (the integration tier), `currency` (what trails its latest), `upgrade`, and the
 plain-command wrappers; `template/README.md` lists them.
 
 ## License
