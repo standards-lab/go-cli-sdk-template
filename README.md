@@ -25,6 +25,9 @@ go install golang.org/x/tools/cmd/gonew@latest
 
 # generate a new CLI
 gonew github.com/standards-lab/go-cli-sdk-template/template@latest example.com/newcli
+
+# the check's lint-references reads the repository's files through git
+cd newcli && git init
 ```
 
 [`gonew`](https://pkg.go.dev/golang.org/x/tools/cmd/gonew) copies the module and rewrites its
@@ -72,6 +75,10 @@ runs the checks inside `template/`, and the release workflow creates a GitHub re
 `template/v*` tag. The template's `.gitignore` and CI workflow are separate copies of the root
 ones; a change to either copy is applied to the other in the same commit.
 
+A file added under `template/` keeps to generation's three constraints: it sits inside the
+subtree, survives the `gonew` path rewrite, and leaves the starter README's identity steps
+complete.
+
 ## Development
 
 ```sh
@@ -81,9 +88,10 @@ mise run check
 mise run integration
 ```
 
-`template/mise.toml` carries the tasks: `check` (the one read-only check CI runs),
-`integration` (the integration tier), `currency` (what trails its latest), `upgrade`, and the
-plain-command wrappers; `template/README.md` lists them.
+`template/mise.toml` pins marathon's tools and carries the tasks: `check` (the one read-only
+check CI runs, ending with lint-context and lint-references in `template/` and at the repository
+root), `integration` (the integration tier), `currency` (what trails its latest), `upgrade`, and
+the plain-command wrappers; `template/README.md` lists them.
 
 ## License
 

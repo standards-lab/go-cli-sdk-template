@@ -8,7 +8,6 @@ import (
 	"github.com/standards-lab/go-core/process/processtest"
 )
 
-// envPrefix opens the name of every variable the program reads.
 const envPrefix = "APP_"
 
 // Main is the suite's TestMain: it unsets every APP_ variable the suite

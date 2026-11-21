@@ -37,7 +37,7 @@ Each task wraps a plain command, so the repository works without mise:
 
 | Task | Command | What it does |
 |------|---------|--------------|
-| `mise run check` | build, vet, `gofmt -l`, `go fix -diff`, `go mod tidy -diff`, `go test -race`, `golangci-lint run` | The one read-only check, as CI runs it |
+| `mise run check` | build, vet, `gofmt -l`, `go fix -diff`, `go mod tidy -diff`, `go test -race`, `golangci-lint run`, `lint-context`, `lint-references` | The one read-only check, as CI runs it; the lints run at the project root and, when the project is nested in a git repository, at its top level |
 | `mise run currency` | `bash scripts/currency.sh` | Report requirements, Go version, tools, and action pins behind their latest |
 | `mise run upgrade` | `go mod edit -go=<current minor> -toolchain=none`, `go get <direct>@latest`, `go mod tidy`, `mise upgrade --bump --local` | Upgrade the go directive, requirements, and tools, rewriting `go.mod` and `mise.toml` |
 | `mise run build` | `go build ./...` | Build the module |
@@ -61,7 +61,12 @@ mounted later is checked too. The integration tier is the `integration` package:
 harness that builds `cmd/app` once and runs it as a subprocess, one shot at a time, over
 go-core's `process/processtest`. Under the `integration` build tag, the suite asserts the CLI
 through its arguments, its two output streams, and its exit code. CI runs it on every push to
-main and on demand.
+main and on demand, below the per-pull-request rate of the unit tier by design; a release is cut
+only from a main whose run has passed.
+
+Tests are black-box: golangci-lint's `testpackage` keeps every test in its package's `_test`
+package, driving the exported API. `export_test.go` is the one white-box file allowed, and only
+to export a clock or probe hook the API cannot reach deterministically.
 
 ## Building out the CLI
 

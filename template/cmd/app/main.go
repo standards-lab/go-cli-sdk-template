@@ -1,5 +1,7 @@
 // Command app is the template's command-line program. Its main derives the
 // signal context and makes one call into the composition root, internal/app.
+// That call sits in run, apart from main, so run's deferred stop releases the
+// signal registration before main's os.Exit, which skips deferred calls.
 package main
 
 import (
@@ -15,9 +17,6 @@ func main() {
 	os.Exit(run())
 }
 
-// run runs app and returns its exit code. It is separate from main so the
-// deferred stop releases the signal registration before os.Exit, which
-// skips deferred calls.
 func run() int {
 	ctx, stop := process.SignalContext()
 	defer stop()
