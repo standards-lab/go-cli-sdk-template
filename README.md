@@ -73,7 +73,7 @@ The root above it maintains the template: `context/` records its design and sess
 README documents it, `CHANGELOG.md` sources the `template/v*` release notes, the CI workflow
 runs the checks inside `template/`, and the release workflow creates a GitHub release for each
 `template/v*` tag. The template's `.gitignore` and CI workflow are separate copies of the root
-ones; a change to either copy is applied to the other in the same commit.
+ones.
 
 A file added under `template/` keeps to generation's three constraints: it sits inside the
 subtree, survives the `gonew` path rewrite, and leaves the starter README's identity steps

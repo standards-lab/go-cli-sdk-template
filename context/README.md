@@ -8,12 +8,16 @@ The README, the starter README, and each package's `doc.go` document this reposi
 [Go Elemental](https://github.com/standards-lab/architecture/blob/main/standards/go-elemental/README.md) standard states the principles it follows.
 This context records only working knowledge the code and the READMEs do not express.
 
-Scenarios are opt-in: go-cli-sdk's `scenario` package runs them, and the starter README and
-`internal/app`'s `doc.go` describe how a generated CLI mounts its own. The template ships none.
-
 ## Capability map
 
-- **Runnable baseline** (built): [template/internal/app/doc.go](../template/internal/app/doc.go).
-- **Test tiers** (built): [template/internal/apptest/doc.go](../template/internal/apptest/doc.go), [template/integration/doc.go](../template/integration/doc.go).
-- **Generation** (built): [README.md](../README.md), [template/README.md](../template/README.md).
-- **CI and release** (built): [README.md](../README.md).
+- **Runnable baseline** (built): the `cmd` entrypoint, the composition root with configuration
+  as graph nodes, and a `version` command
+  ([template/internal/app/doc.go](../template/internal/app/doc.go)).
+- **Test tiers** (built): the composition root's fixtures and an integration suite on
+  `processtest`'s one-shot runner
+  ([template/internal/apptest/doc.go](../template/internal/apptest/doc.go),
+  [template/integration/doc.go](../template/integration/doc.go)).
+- **Generation** (built): the module copies cleanly with `gonew` ([README.md](../README.md),
+  [template/README.md](../template/README.md)).
+- **CI and release** (built): the check and integration suite in CI, and `template/v*` tags cut
+  from the root `CHANGELOG.md` ([README.md](../README.md)).
