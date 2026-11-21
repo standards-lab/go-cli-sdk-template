@@ -4,13 +4,10 @@ golangci-lint = "2.15.0"
 jq = "1.8.2"
 
 [env]
-# The CLI's Go modules, as directories; tasks run in each one.
 GO_MODULES = "."
 
-# check vets, fixes, and lints with the integration tag so the integration
-# suite compiles and lints too; it runs only the unit tier.
 [tasks.check]
-description = "Build, vet, format, fix, tidy, test, and lint every module; writes nothing"
+description = "Build, vet, format, fix, tidy, test, and lint every module, vet, fix, and lint covering the integration build tag and test running the unit tier alone; writes nothing"
 run = '''
 set -eu
 export GOWORK=off
@@ -28,17 +25,15 @@ for mod in $GO_MODULES; do
 done
 '''
 
-# currency runs through bash: gonew does not keep the script's executable bit.
 [tasks.currency]
-description = "Report every requirement, Go version, tool, and action pin behind its latest; writes nothing"
+description = "Report every requirement, Go version, tool, and action pin behind its latest, through bash because gonew does not keep the script's executable bit; writes nothing"
 run = "bash scripts/currency.sh"
 
 [tasks.upgrade]
-description = "Upgrade every module's go directive and direct requirements and the local mise tools to their latest, rewriting go.mod and mise.toml"
+description = "Upgrade every module's go directive to the current Go minor with no toolchain line, its direct requirements, and the local mise tools to their latest, rewriting go.mod and mise.toml"
 run = '''
 set -eu
 export GOWORK=off
-# The go directive follows the current Go minor, with no toolchain line.
 go_minor=$(mise latest go | cut -d. -f1,2)
 for mod in $GO_MODULES; do
   cd "$MISE_PROJECT_ROOT/$mod"
@@ -63,9 +58,8 @@ run = "go vet -tags integration ./..."
 description = "Run the unit tier"
 run = "go test -race ./..."
 
-# The integration tier runs the built CLI as a subprocess, one shot at a time.
 [tasks.integration]
-description = "Run the integration tier against the built CLI"
+description = "Run the integration tier against the built CLI, as a subprocess, one shot at a time"
 run = "go test -race -count=1 -tags integration ./integration/"
 
 [tasks.fmt]

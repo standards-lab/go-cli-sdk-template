@@ -61,7 +61,12 @@ mounted later is checked too. The integration tier is the `integration` package:
 harness that builds `cmd/app` once and runs it as a subprocess, one shot at a time, over
 go-core's `process/processtest`. Under the `integration` build tag, the suite asserts the CLI
 through its arguments, its two output streams, and its exit code. CI runs it on every push to
-main and on demand.
+main and on demand, below the per-pull-request rate of the unit tier by design; a release is cut
+only from a main whose run has passed.
+
+Tests are black-box: golangci-lint's `testpackage` keeps every test in its package's `_test`
+package, driving the exported API. `export_test.go` is the one white-box file allowed, and only
+to export a clock or probe hook the API cannot reach deterministically.
 
 ## Building out the CLI
 

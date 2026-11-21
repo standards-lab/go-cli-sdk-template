@@ -12,7 +12,27 @@
 //     lifecycle configuration alone, in the template baseline);
 //   - domain.go: defineDomain and mountDomain, the domain services and
 //     their commands (none, in the template);
-//   - version.go: the version command, which declares no nodes.
+//   - version.go: the version command, which declares no nodes and prints
+//     the main module's version, or (devel) when the binary carries none, as
+//     under go test.
+//
+// envPrefix, in infrastructure.go, is the single constant every APP_
+// variable name derives from; go-core's config convention composes the
+// rest, such as APP_SHUTDOWN_TIMEOUT. Every infrastructure value is read or
+// constructed in its node's constructor, which runs only when a Build
+// reaches the node, so configuration is read only for a command that
+// declares a node, never in [New]. A service whose value implements
+// lifecycle.Subsystem takes part in startup and shutdown through its own
+// methods, and its constructor opens nothing: connectivity belongs to its
+// Start, so a failed Build leaks no connections.
+//
+// Domain services are defined in the module's base-layer domain packages,
+// one package per layer under domain/, with one node per layer whose
+// constructor builds the service from the infrastructure nodes it Uses. A
+// package that owns a resource and is built once for a command belongs in
+// infrastructure.go instead. mountDomain mounts each layer's commands with
+// one root.Add(pkg.Commands(...)...) per layer over the nodes it passes.
+// Which services the program composes is the application author's decision.
 //
 // The template has no admin layer and no scenario layer by default. An
 // admin layer, the services that administer an infrastructure service, goes
