@@ -15,6 +15,7 @@ five kinds. The module's requirements are unchanged.
 
 ### Changed
 
+- CI's workflow runs `jdx/mise-action` v5.2.10.
 - golangci-lint enables `nolintlint`: a `//nolint` directive names the linter it suppresses and
   gives a reason.
 - `mise.toml` pins marathon 0.22.0, and `mise run check` ends with `lint-context` and

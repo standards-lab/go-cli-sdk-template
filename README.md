@@ -75,6 +75,10 @@ runs the checks inside `template/`, and the release workflow creates a GitHub re
 `template/v*` tag. The template's `.gitignore` and CI workflow are separate copies of the root
 ones; a change to either copy is applied to the other in the same commit.
 
+A file added under `template/` keeps to generation's three constraints: it sits inside the
+subtree, survives the `gonew` path rewrite, and leaves the starter README's identity steps
+complete.
+
 ## Development
 
 ```sh
@@ -86,8 +90,8 @@ mise run integration
 
 `template/mise.toml` pins marathon's tools and carries the tasks: `check` (the one read-only
 check CI runs, ending with lint-context and lint-references in `template/` and at the repository
-root), `integration` (the integration tier), `currency` (what trails its latest), `upgrade`, and the
-plain-command wrappers; `template/README.md` lists them.
+root), `integration` (the integration tier), `currency` (what trails its latest), `upgrade`, and
+the plain-command wrappers; `template/README.md` lists them.
 
 ## License
 
