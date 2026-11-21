@@ -7,6 +7,27 @@ generated CLI starts its own changelog; this one records the template's.
 
 ## [Unreleased]
 
+## [v0.3.1] - 2026-11-21
+
+A generated CLI inherits the organization's development harness: its check runs marathon's
+context lints, its suppressions name their linter and reason, and its comments are held to the
+five kinds. The module's requirements are unchanged.
+
+### Changed
+
+- golangci-lint enables `nolintlint`: a `//nolint` directive names the linter it suppresses and
+  gives a reason.
+- `mise.toml` pins marathon 0.22.0, and `mise run check` ends with `lint-context` and
+  `lint-references` in the project and, when it is nested in a git repository, at its top level.
+- Comments are held to the five kinds: in-body comments, unexported-identifier docs and
+  test-function docs are removed, and their reasoning moves to the package docs (the
+  `internal/app` doc covers its infrastructure and domain services) and the READMEs.
+- The starter README gains the testing and integration-tier reasoning that sat in comments: tests
+  are black-box under `testpackage`, and a release is cut only from a main whose integration run
+  has passed.
+- The generation steps change into the new directory and run `git init`, which the check's
+  `lint-references` needs to read the repository's files.
+
 ## [v0.3.0] - 2026-11-12
 
 The template moves onto go-core v0.12.0 and go-cli-sdk v0.4.0. The template's own code is
@@ -99,7 +120,8 @@ The first release. A generated CLI starts as a minimal runnable command-line pro
   wrappers), the CI workflow, and the starter README with the identity steps and the scenario
   opt-in.
 
-[Unreleased]: https://github.com/standards-lab/go-cli-sdk-template/compare/template/v0.3.0...HEAD
+[Unreleased]: https://github.com/standards-lab/go-cli-sdk-template/compare/template/v0.3.1...HEAD
+[v0.3.1]: https://github.com/standards-lab/go-cli-sdk-template/compare/template/v0.3.0...template/v0.3.1
 [v0.3.0]: https://github.com/standards-lab/go-cli-sdk-template/compare/template/v0.2.0...template/v0.3.0
 [v0.2.0]: https://github.com/standards-lab/go-cli-sdk-template/compare/template/v0.1.0...template/v0.2.0
 [v0.1.0]: https://github.com/standards-lab/go-cli-sdk-template/releases/tag/template/v0.1.0
