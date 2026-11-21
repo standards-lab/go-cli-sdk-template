@@ -1,11 +1,14 @@
 .claude/plans/
 .claude/briefs/
 mise.local.toml
+
 secrets*.json
+
 bin/
 *.test
 coverage.out
 coverage.html
+
 go.work
 go.work.sum
 tmp/

@@ -12,7 +12,7 @@ jq = "1.8.2"
 GO_MODULES = "."
 
 [tasks.check]
-description = "Build, vet, format, fix, tidy, test, and lint every module, vet, fix, and lint covering the integration build tag and test running the unit tier alone, then run lint-context and lint-references at the project root and, when the project is nested, at the git top level; writes nothing"
+description = "Build, vet, format, fix, tidy, test the unit tier, and lint every module, vetting, fixing, and linting the integration suite too, then run lint-context and lint-references at the project root and, when the project is nested, at the git top level; writes nothing"
 run = '''
 set -eu
 export GOWORK=off
@@ -45,7 +45,7 @@ exit "$fail"
 '''
 
 [tasks.currency]
-description = "Report every requirement, Go version, tool, and action pin behind its latest, through bash because gonew does not keep the script's executable bit; writes nothing"
+description = "Report every requirement, Go version, tool, and action pin behind its latest, running the script through bash since gonew drops its executable bit; writes nothing"
 run = "bash scripts/currency.sh"
 
 [tasks.upgrade]
