@@ -25,6 +25,9 @@ go install golang.org/x/tools/cmd/gonew@latest
 
 # generate a new CLI
 gonew github.com/standards-lab/go-cli-sdk-template/template@latest example.com/newcli
+
+# the check's lint-references reads the repository's files through git
+cd newcli && git init
 ```
 
 [`gonew`](https://pkg.go.dev/golang.org/x/tools/cmd/gonew) copies the module and rewrites its
